@@ -1,0 +1,21 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", function (event) {
+      const destination = document.getElementById("destination").value.trim();
+      const carrier = document.getElementById("carrier").value;
+      const method = document.getElementById("method").value;
+
+      if (!destination || !carrier || !method) {
+        alert("Please fill out all fields before continuing.");
+        event.preventDefault(); // prevent form submission
+      } else {
+        console.log("Shipping Info Submitted:");
+        console.log("Destination:", destination);
+        console.log("Carrier:", carrier);
+        console.log("Method:", method);
+      }
+    });
+  });
+</script>

@@ -170,7 +170,7 @@
 
   <div class="shipping-container">
     <h1>Shipping Selection</h1>
-    <form id="shippingForm" action="submit_shipping.php" method="POST">
+    <form id="shippingForm">
       <label for="destination">Shipping Destination</label>
       <input type="text" id="destination" name="destination" class="form-control" placeholder="Enter city, state, or zip" required>
 
@@ -196,23 +196,52 @@
   </div>
 
   <script>
+    // Wait for the DOM to fully load
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("shippingForm");
 
+      // Handle form submission
       form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Stop the default form action
+
+        // Get form input values
         const destination = document.getElementById("destination").value.trim();
         const carrier = document.getElementById("carrier").value;
         const method = document.getElementById("method").value;
 
+        // Check if all fields are filled
         if (!destination || !carrier || !method) {
-          alert("Please fill out all fields before continuing.");
-          event.preventDefault(); 
-        } else {
-          console.log("Shipping Info Submitted:");
-          console.log("Destination:", destination);
-          console.log("Carrier:", carrier);
-          console.log("Method:", method);
+          alert("Please fill out all fields.");
+          return;
         }
+
+        //  JSON Role: Create shipping data object
+        const shippingData = {
+          shippingDestination: destination,
+          shippingCarrier: carrier,
+          shippingMethod: method,
+          timestamp: new Date().toISOString()
+        };
+
+        console.log("Shipping Data JSON:", JSON.stringify(shippingData, null, 2));
+
+        //  AJAX Role: Send JSON to a server using Fetch API
+        fetch("https://jsonplaceholder.typicode.com/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(shippingData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Shipping data sent to server:", data);
+          alert("Shipping data sent successfully!");
+        })
+        .catch(error => {
+          console.error("Error sending data:", error);
+          alert("Failed to send data.");
+        });
       });
     });
   </script>
